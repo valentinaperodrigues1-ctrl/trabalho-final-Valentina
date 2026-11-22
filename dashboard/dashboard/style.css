@@ -1,0 +1,559 @@
+/* ==========================================================================
+   NICE ROOMS — HOTEL PERFORMANCE
+   Estilo profissional minimalista de BI com responsividade completa
+   Paleta: Azul-marinho principal, azul médio, turquesa secundário e neutros
+   ========================================================================== */
+
+:root {
+  --navy: #12355b;
+  --navy-dark: #0d2744;
+  --blue: #2b6cb0;
+  --teal: #1b998b;
+  --amber: #d9822b;
+  --coral: #c84b31;
+
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --divider: #edf2f7;
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   A. Cabeçalho minimalista com filtros alinhados à direita
+   ========================================================================== */
+.topbar {
+  background-color: var(--surface);
+  border-top: 4px solid var(--navy);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+}
+
+.topbar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--navy);
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.filters-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 155px;
+}
+
+.filter-group label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.filter-group select {
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background-color: var(--surface);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(18, 53, 91, 0.12);
+}
+
+.btn-reset,
+.btn-primary {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-reset {
+  background-color: #f8fafc;
+  color: var(--navy);
+  border: 1px solid #cbd5e1;
+}
+
+.btn-reset:hover {
+  background-color: #edf2f7;
+  border-color: #94a3b8;
+}
+
+.btn-primary {
+  background-color: var(--navy);
+  color: #ffffff;
+  border: 1px solid var(--navy);
+}
+
+.btn-primary:hover {
+  background-color: var(--navy-dark);
+}
+
+/* ==========================================================================
+   Layout principal e cards
+   ========================================================================== */
+.dashboard-main {
+  padding-top: 24px;
+  padding-bottom: 36px;
+}
+
+#dashboardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+  min-width: 0;
+}
+
+/* Estado vazio */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.empty-state h2 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  color: var(--navy);
+}
+
+.empty-state p {
+  margin: 0 auto 20px;
+  max-width: 480px;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   B. Primeira linha — 3 KPIs + 4º espaço vazio proposital
+   ========================================================================== */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  border-left: 3px solid var(--navy);
+}
+
+.kpi-card:nth-child(2) {
+  border-left-color: var(--blue);
+}
+
+.kpi-card:nth-child(3) {
+  border-left-color: var(--teal);
+}
+
+.kpi-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.kpi-value {
+  font-size: clamp(1.5rem, 2.2vw, 1.95rem);
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-meta {
+  font-size: 0.81rem;
+  color: var(--text-secondary);
+}
+
+/* Quarto espaço vazio proposital (sem fundo, sem borda, sem decoração) */
+.kpi-spacer {
+  min-height: 1px;
+}
+
+/* ==========================================================================
+   C, D e E. Linhas de gráficos (Hero em largura total + pares em 2 colunas)
+   ========================================================================== */
+.primary-chart-row {
+  display: block;
+}
+
+.charts-pair-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.pair-spacer {
+  min-height: 1px;
+}
+
+.chart-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.chart-head h2 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.3;
+}
+
+.chart-desc {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.scope-tag {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--navy);
+  background-color: #eef3f8;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Controle segmentado (Por Hotel / Por Tier) no Gráfico 4 */
+.segmented-control {
+  display: inline-flex;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.seg-btn {
+  border: none;
+  background-color: #f8fafc;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.seg-btn + .seg-btn {
+  border-left: 1px solid #cbd5e1;
+}
+
+.seg-btn.active {
+  background-color: var(--navy);
+  color: #ffffff;
+}
+
+/* Contêineres de canvas com min-width: 0 para encolher corretamente no redimensionamento */
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.canvas-hero {
+  height: 380px;
+}
+
+.canvas-secondary {
+  height: 320px;
+}
+
+.canvas-tall {
+  height: 365px;
+}
+
+/* ==========================================================================
+   F. Tabela dinâmica de desempenho
+   ========================================================================== */
+.table-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.table-head h2 {
+  margin: 0;
+  font-size: 1.04rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.table-counter {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background-color: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  font-size: 0.88rem;
+}
+
+thead th {
+  text-align: left;
+  padding: 11px 12px;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+thead th:hover {
+  color: var(--navy);
+}
+
+thead th.sorted-asc::after {
+  content: " ▲";
+  color: var(--navy);
+}
+
+thead th.sorted-desc::after {
+  content: " ▼";
+  color: var(--navy);
+}
+
+tbody td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--divider);
+  color: var(--text);
+}
+
+tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+th.num,
+td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.hotel-primary {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.hotel-code {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-right: 6px;
+  font-weight: 700;
+}
+
+.tier-tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  background-color: #edf2f7;
+  color: var(--navy);
+}
+
+.tier-luxury { background-color: #e6eef7; color: #12355b; }
+.tier-upscale { background-color: #e3f5f3; color: #11645b; }
+.tier-boutique { background-color: #eef2ff; color: #3730a3; }
+.tier-midscale { background-color: #fef3e2; color: #9a5210; }
+.tier-economy { background-color: #f1f5f9; color: #475569; }
+
+/* ==========================================================================
+   G. Rodapé institucional
+   ========================================================================== */
+.footer {
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.footer p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Responsividade (Tablets e Celulares)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .kpi-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .kpi-spacer,
+  .pair-spacer {
+    display: none;
+  }
+
+  .charts-pair-row {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-bar {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 680px) {
+  .container {
+    padding: 0 14px;
+  }
+
+  .topbar {
+    padding: 16px 0;
+  }
+
+  .filters-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .filter-group {
+    min-width: 0;
+  }
+
+  .btn-reset {
+    width: 100%;
+  }
+
+  /* KPIs em 2 colunas no celular conforme especificado */
+  .kpi-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .kpi-card:nth-child(3) {
+    grid-column: span 2;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .canvas-hero {
+    height: 300px;
+  }
+
+  .canvas-secondary {
+    height: 270px;
+  }
+
+  .canvas-tall {
+    height: 320px;
+  }
+}

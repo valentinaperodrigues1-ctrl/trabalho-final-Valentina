@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NICE ROOMS — HOTEL PERFORMANCE</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Biblioteca de gráficos Chart.js via CDN (Módulo 9) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
+  <!-- Dados reais pré-agregados do banco SQLite nice_rooms.db -->
+  <script src="dados_dashboard.js" defer></script>
+  <!-- Lógica de filtros, KPIs, gráficos interativos e tabela -->
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- A. Cabeçalho com título à esquerda e filtros alinhados à direita -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <h1>NICE ROOMS — HOTEL PERFORMANCE</h1>
+        <p class="subtitle">Painel de desempenho, posicionamento e análise hoteleira.</p>
+      </div>
+
+      <section class="filters-bar" aria-label="Filtros gerais do painel">
+        <div class="filter-group">
+          <label for="filterHotel">Hotel</label>
+          <select id="filterHotel">
+            <option value="all">Todos os hotéis (14)</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filterTier">Tier</label>
+          <select id="filterTier">
+            <option value="all">Todos os tiers</option>
+            <option value="luxury">Luxury</option>
+            <option value="upscale">Upscale</option>
+            <option value="boutique">Boutique</option>
+            <option value="midscale">Midscale</option>
+            <option value="economy">Economy</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filterYear">Ano</label>
+          <select id="filterYear">
+            <option value="all">Todos (2027–2028)</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+          </select>
+        </div>
+
+        <button type="button" id="btnResetFilters" class="btn-reset">Limpar filtros</button>
+      </section>
+    </div>
+  </header>
+
+  <main class="container dashboard-main">
+    <!-- Estado vazio exibido quando os filtros não retornam nenhum registro -->
+    <section id="emptyState" class="card empty-state hidden" role="status" aria-live="polite">
+      <h2>Nenhum dado encontrado para os filtros selecionados</h2>
+      <p>
+        A combinação atual de hotel, tier e ano não possui registros na base.
+        Limpe os filtros para retornar à visão completa da associação.
+      </p>
+      <button type="button" id="btnEmptyReset" class="btn-primary">Limpar filtros</button>
+    </section>
+
+    <!-- Conteúdo analítico (KPIs, 6 gráficos e tabela) -->
+    <div id="dashboardContent">
+      <!-- B. Primeira linha: 3 KPIs principais + 4º espaço vazio proposital -->
+      <section class="kpi-row" aria-label="Indicadores principais">
+        <article class="card kpi-card">
+          <span class="kpi-label">Ocupação média</span>
+          <strong class="kpi-value" id="kpiOccupancy">—</strong>
+          <span class="kpi-meta" id="kpiOccupancyMeta">—</span>
+        </article>
+
+        <article class="card kpi-card">
+          <span class="kpi-label">Diária média (ADR)</span>
+          <strong class="kpi-value" id="kpiAdr">—</strong>
+          <span class="kpi-meta" id="kpiAdrMeta">—</span>
+        </article>
+
+        <article class="card kpi-card">
+          <span class="kpi-label">Receita por quarto disponível (RevPAR)</span>
+          <strong class="kpi-value" id="kpiRevpar">—</strong>
+          <span class="kpi-meta" id="kpiRevparMeta">—</span>
+        </article>
+
+        <!-- Quarto espaço vazio proposital conforme wireframe aprovado -->
+        <div class="kpi-spacer" aria-hidden="true"></div>
+      </section>
+
+      <!-- C. Segunda linha: Gráfico principal em largura total -->
+      <section class="primary-chart-row" aria-label="Gráfico principal">
+        <article class="card chart-card chart-card-hero">
+          <div class="chart-head">
+            <div>
+              <h2>Evolução do desempenho hoteleiro (2027–2028)</h2>
+              <p class="chart-desc">
+                Série semanal de ocupação média (%) e diária média ADR (USD), com destaque para semanas com eventos de demanda.
+                Clique na legenda para ocultar ou exibir séries.
+              </p>
+            </div>
+            <span class="scope-tag" id="scopeSummary">14 hotéis · 104 semanas</span>
+          </div>
+          <div class="canvas-wrap canvas-hero">
+            <canvas id="chartEvolution"></canvas>
+          </div>
+        </article>
+      </section>
+
+      <!-- D. Terceira linha: Dois gráficos secundários lado a lado -->
+      <section class="charts-pair-row" aria-label="Gráficos secundários">
+        <article class="card chart-card">
+          <div class="chart-head">
+            <div>
+              <h2>Comparação de desempenho entre tiers</h2>
+              <p class="chart-desc">
+                ADR (USD), RevPAR (USD) no eixo esquerdo e ocupação média (%) no eixo direito.
+              </p>
+            </div>
+          </div>
+          <div class="canvas-wrap canvas-secondary">
+            <canvas id="chartTiers"></canvas>
+          </div>
+        </article>
+
+        <article class="card chart-card">
+          <div class="chart-head">
+            <div>
+              <h2>Mapa de posicionamento competitivo</h2>
+              <p class="chart-desc">
+                Índice de preço (ARI, eixo X) × índice de ocupação (MPI, eixo Y) contra concorrentes. Linhas em 100 = paridade.
+              </p>
+            </div>
+          </div>
+          <div class="canvas-wrap canvas-secondary">
+            <canvas id="chartPositioning"></canvas>
+          </div>
+        </article>
+      </section>
+
+      <!-- E. Quarta linha (parte 1): Gráficos 4 e 5 em par -->
+      <section class="charts-pair-row" aria-label="Análise MARS e cenários de avaliação">
+        <article class="card chart-card">
+          <div class="chart-head chart-head-toggle">
+            <div>
+              <h2>Desvio entre preço praticado e diária MARS</h2>
+              <p class="chart-desc">
+                Desvio percentual médio em relação à diária MARS (faixa sombreada = banda ±6%).
+              </p>
+            </div>
+            <div class="segmented-control" role="group" aria-label="Agrupamento do gráfico MARS">
+              <button type="button" id="btnMarsHotel" class="seg-btn active">Por Hotel</button>
+              <button type="button" id="btnMarsTier" class="seg-btn">Por Tier</button>
+            </div>
+          </div>
+          <div class="canvas-wrap canvas-tall">
+            <canvas id="chartMars"></canvas>
+          </div>
+        </article>
+
+        <article class="card chart-card">
+          <div class="chart-head">
+            <div>
+              <h2>Distribuição dos cenários das avaliações</h2>
+              <p class="chart-desc">
+                Participação (%) e volume por cenário, ordenados do mais frequente ao menos frequente (barras horizontais no lugar de pizza).
+              </p>
+            </div>
+          </div>
+          <div class="canvas-wrap canvas-tall">
+            <canvas id="chartScenarios"></canvas>
+          </div>
+        </article>
+      </section>
+
+      <!-- E. Quarta linha (parte 2): Gráfico 6 preservando o ritmo de pares + espaço vazio equilibrado -->
+      <section class="charts-pair-row" aria-label="Resultados das decisões de preço">
+        <article class="card chart-card">
+          <div class="chart-head">
+            <div>
+              <h2>Resultados das decisões de preço</h2>
+              <p class="chart-desc">
+                Comparação dos resultados (better, in line, worse) por ação tarifária semanal (raise, hold, lower).
+              </p>
+            </div>
+          </div>
+          <div class="canvas-wrap canvas-secondary">
+            <canvas id="chartDecisions"></canvas>
+          </div>
+        </article>
+
+        <!-- Espaço livre intencional para manter a proporção de 2 colunas sem distorcer o Gráfico 6 -->
+        <div class="pair-spacer" aria-hidden="true"></div>
+      </section>
+
+      <!-- F. Tabela de desempenho dinâmica -->
+      <section class="card table-card" aria-label="Tabela de desempenho dos hotéis">
+        <div class="table-head">
+          <div>
+            <h2>Tabela de desempenho por hotel</h2>
+            <p class="chart-desc">
+              Clique em qualquer cabeçalho para ordenar. Indicadores ponderados pelo número de quartos-noite e avaliações reais.
+            </p>
+          </div>
+          <span class="table-counter" id="tableCounter">14 hotéis</span>
+        </div>
+
+        <div class="table-scroll">
+          <table id="performanceTable">
+            <thead>
+              <tr>
+                <th data-sort="name">Nome do hotel</th>
+                <th data-sort="tier">Tier</th>
+                <th data-sort="occupancy" class="num">Ocupação média</th>
+                <th data-sort="adr" class="num">ADR</th>
+                <th data-sort="revpar" class="num">RevPAR</th>
+                <th data-sort="totalRevenue" class="num">Receita total</th>
+                <th data-sort="meanRating" class="num">Nota média</th>
+              </tr>
+            </thead>
+            <tbody id="performanceTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- G. Rodapé com fonte oficial e aviso de dataset sintético -->
+  <footer class="footer">
+    <div class="container">
+      <p>
+        Fonte: Base de dados Nice Rooms — Hotel Revenue, MARS and Reviews. Dataset sintético, desenvolvido para fins educacionais. Os resultados representam dados simulados e não devem ser interpretados como informações reais do mercado hoteleiro.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
